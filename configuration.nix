@@ -172,13 +172,13 @@ in
 
     # The state version is required and should stay at the version you
     # originally installed.
-    home-manager.users.mahd = { pkgs, ... }: {
-    #home.packages = [ pkgs.atool pkgs.httpie ];
-    # programs.bash.enable = true;
-
-    # The state version is required and should stay at the version you
-    # originally installed.
     home.stateVersion = "25.05";
+  };
+  # Install firefox.
+  programs = {
+    zsh = {
+	enable = true;
+	enableCompletion = true;
 	enableLsColors = true;
     };
     firefox = {
