@@ -155,14 +155,6 @@ in
       packages = with pkgs; [
       #  thunderbird
       ];
-      programs.git = {
-        config = {
-          "user" = {
-            "name" = "mcpeapsUnterstrichHD";
-            "email" = "mcpeaps_HD@outlook.com";
-          };
-        };
-      };
       expires = null;
     };
     root = {
@@ -180,13 +172,18 @@ in
 
     # The state version is required and should stay at the version you
     # originally installed.
+    home-manager.users.mahd = { pkgs, ... }: {
+    #home.packages = [ pkgs.atool pkgs.httpie ];
+    # programs.bash.enable = true;
+
+    programs.git = {
+      userName = "mcpeapsUnterstrichHD";
+      userEmail = "mcpeaps_HD@outlook.com";
+    };
+
+    # The state version is required and should stay at the version you
+    # originally installed.
     home.stateVersion = "25.05";
-  };
-  # Install firefox.
-  programs = {
-    zsh = {
-	enable = true;
-	enableCompletion = true;
 	enableLsColors = true;
     };
     firefox = {
