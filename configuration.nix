@@ -155,6 +155,16 @@ in
       packages = with pkgs; [
       #  thunderbird
       ];
+      programs = {
+        git = {
+          config = {
+            user = {
+              name = "mcpeapsUnterstrichHD";
+              email = "mcpeaps_HD@outlook.com";
+            }
+          }
+        };
+      };
       expires = null;
     };
     root = {
