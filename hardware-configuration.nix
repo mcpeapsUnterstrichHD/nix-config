@@ -99,7 +99,15 @@
     };
 
   hardware.video.hidpi.enable = true;
-  services.xserver.xrandrHeads.*.monitorConfig = ''
-
-  '';
+  services.xserver.xrandrHeads = [
+    {
+      output = "HDMI-0";
+      primary = true;
+      monitorConfig = ''
+        Option "PreferredMode" "1920x1080"
+        Option "Rate" "59.94"
+        Option "Scale" "1.25x1.25"
+      '';
+    }
+  ];
 }
