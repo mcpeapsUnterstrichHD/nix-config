@@ -99,7 +99,6 @@
     };
   };
 
-  hardware.video.hidpi.enable = true;
   services.xserver.xrandrHeads = [
     {
       output = "HDMI-0";
