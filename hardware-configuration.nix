@@ -54,7 +54,6 @@
   hardware.graphics = {
     enable = true;
   }; # Aktiviert die Grafikkarte opengl
-  hardware.opengl.enable = true; # Aktiviert OpenGL
   services.xserver.videoDrivers = [ "nvidia" ]; # Aktiviert den NVIDIA-Treiber
   hardware.nvidia = {
 
