@@ -155,6 +155,12 @@ in
       packages = with pkgs; [
       #  thunderbird
       ];
+      programs.git = {
+        config = {
+          "user.name" = "mcpeapsUnterstrichHD";
+          "user.email" = "mcpeaps_HD@outlook.com"
+        };
+      };
       expires = null;
     };
     root = {
@@ -218,7 +224,7 @@ in
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     stow
-    git
+    gitFull
     git-lfs
     git-lfs-transfer
     gitAndTools.gh
