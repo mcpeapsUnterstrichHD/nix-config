@@ -3,3 +3,5 @@
 #only run this on fresh install
 # synchronizing dotfiles
 sudo stow .
+
+nixos-rebuild switch --use-remote-sudo
