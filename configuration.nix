@@ -157,9 +157,9 @@ in
       ];
       programs.git = {
         config = {
-          user = {
-            name = "mcpeapsUnterstrichHD";
-            email = "mcpeaps_HD@outlook.com";
+          "user" = {
+            "name" = "mcpeapsUnterstrichHD";
+            "email" = "mcpeaps_HD@outlook.com";
           };
         };
       };
