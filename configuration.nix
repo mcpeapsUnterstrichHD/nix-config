@@ -62,7 +62,7 @@ in
     boot.plymouth = {
       enable = true;
       theme = "nordic";
-    }
+    };
 
     # Register a v4l2loopback device at boot
     #boot.kernelModules = [
