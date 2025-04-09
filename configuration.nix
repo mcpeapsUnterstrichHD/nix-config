@@ -156,10 +156,10 @@ in
       #  thunderbird
       ];
       programs.git = {
-        config = {
-          "user.name" = "mcpeapsUnterstrichHD";
-          "user.email" = "mcpeaps_HD@outlook.com";
-        };
+        config = [
+          {"user.name" = "mcpeapsUnterstrichHD";}
+          {"user.email" = "mcpeaps_HD@outlook.com";}
+        ];
       };
       expires = null;
     };
