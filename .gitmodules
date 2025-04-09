@@ -1,0 +1,3 @@
+[submodule "dotfiles-linux"]
+	path = dotfiles-linux
+	url = https://github.com/mcpeapsUnterstrichHD/dotfiles-linux.git
