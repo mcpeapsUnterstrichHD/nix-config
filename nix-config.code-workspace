@@ -4,5 +4,14 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"arrterian.nix-env-selector",
+			"bbenoist.nix",
+			"jnoortheen.nix-ide",
+			"pinage404.nix-extension-pack",
+			"mkhl.direnv"
+		]
+	}
 }
