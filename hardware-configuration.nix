@@ -54,4 +54,5 @@
   services.xserver.videoDrivers = [ "nvidia" ]; # Aktiviert den NVIDIA-Treiber
   hardware.nvidia.modesetting.enable = true;    # Aktiviert Modesetting für NVIDIA
   hardware.nvidia.package = pkgs.nvidiaPackages.latest; # Verwendet den neuesten Treiber
+  hardware.cuda.enable = true; # Aktiviert CUDA-Unterstützung
 }

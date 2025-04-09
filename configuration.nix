@@ -161,8 +161,8 @@ in
             user = {
               name = "mcpeapsUnterstrichHD";
               email = "mcpeaps_HD@outlook.com";
-            }
-          }
+            };
+          };
         };
       };
       expires = null;
