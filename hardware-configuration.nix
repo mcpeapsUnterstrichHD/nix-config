@@ -97,6 +97,7 @@
     touchpad = {
       accelProfile = "flat";
     };
+  };
 
   hardware.video.hidpi.enable = true;
   services.xserver.xrandrHeads = [
