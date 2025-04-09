@@ -104,9 +104,9 @@
       output = "HDMI-0";
       primary = true;
       monitorConfig = ''
-        Option "PreferredMode" "1920x1080"
-        Option "Rate" "59.94"
-        Option "Scale" "1.25x1.25"
+        Option "PreferredMode" "1360x768"
+        Option "Rate" "60.02"
+        Option "Scale" "0.8x0.8"
       '';
     }
   ];
