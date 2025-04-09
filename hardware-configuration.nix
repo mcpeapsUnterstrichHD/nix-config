@@ -49,4 +49,9 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # NVIDIA proprietäre Treiber hinzufügen
+  services.xserver.videoDrivers = [ "nvidia" ]; # Aktiviert den NVIDIA-Treiber
+  hardware.nvidia.modesetting.enable = true;    # Aktiviert Modesetting für NVIDIA
+  hardware.nvidia.package = pkgs.nvidiaPackages.latest; # Verwendet den neuesten Treiber
 }
