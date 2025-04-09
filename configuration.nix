@@ -16,6 +16,15 @@ in
       (import "${home-manager}/nixos")
     ];
 
+
+console.font =
+    "${pkgs.terminus_font}/share/consolefonts/ter-u11n.psf.gz";
+  services.xserver.dpi = 96;
+  environment.variables = {
+    GDK_SCALE = "1";
+    GDK_DPI_SCALE = "0.8";
+    _JAVA_OPTIONS = "-Dsun.java2d.uiScale=1";
+  };
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

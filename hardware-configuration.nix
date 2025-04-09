@@ -85,4 +85,21 @@
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
+
+  services.libinput = {
+    enable = true;
+  # disabling mouse acceleration
+    mouse = {
+      accelProfile = "flat";
+    };
+
+    # disabling touchpad acceleration
+    touchpad = {
+      accelProfile = "flat";
+    };
+
+  hardware.video.hidpi.enable = true;
+  services.xserver.xrandrHeads.*.monitorConfig = ''
+
+  '';
 }
