@@ -148,7 +148,14 @@ console.font =
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-   services.libinput.enable = true;
+  services.libinput.enable = true;
+
+  systemd.user.services.mpris-proxy = {
+    description = "Mpris proxy";
+    after = [ "network.target" "sound.target" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+};
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   home-manager.useUserPackages = true;
@@ -251,6 +258,9 @@ console.font =
     nordzy-cursor-theme
     papirus-nord
     papirus-folders
+    ventoy-full
+    ventoy-full-gtk
+    ventoy-full-qt
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -378,7 +388,11 @@ console.font =
     };
     desktopManager = {
     xterm.enable=false;
-    xfce.enable = true;
+    xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
     };
     windowManager.i3 = {
       enable = true;
@@ -412,12 +426,17 @@ console.font =
 	xfce.xfce4-cpufreq-plugin
 	xfce.xfce4-clipman-plugin
 	xfce.xfce4-battery-plugin
-	xfce.thunar-media-tags-plugin
-	xfce.thunar-archive-plugin
-      ];
+	xfce.thunar-vcs-plugin
+  xfce.thunar-media-tags-plugin
+  xfce.thunar-archive-plugin
+  xfce.xfconf
+  xfce.xfce4-panel
+  xfce.xfce4-panel-profiles
+  ];
       package = pkgs.i3-gaps;
     };
   };
+  #programs.xfconf.enable;
   #services.xserver.enable = true;
   services.displayManager.defaultSession = "xfce+i3";
   services.picom = {
