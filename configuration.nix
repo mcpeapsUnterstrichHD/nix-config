@@ -29,7 +29,7 @@ console.font =
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   # Enable BBR congestion control
-    boot.kernelModules = [ "tcp_bbr" ];
+    boot.kernelModules = [ "tcp_bbr" "snd-seq" "snd-rawmidi" ];
     boot.kernel.sysctl."net.ipv4.tcp_congestion_control" = "bbr";
     boot.kernel.sysctl."net.core.default_qdisc" = "fq"; # see https://news.ycombinator.com/item?id=14814530
 
@@ -131,7 +131,6 @@ console.font =
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  #hardware.alsa.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -141,6 +140,40 @@ console.font =
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     jack.enable = true;
+    wireplumber.extraConfig.bluetoothEnhancements = {
+  "monitor.bluez.properties" = {
+      "bluez5.enable-sbc-xq" = true;
+      "bluez5.enable-msbc" = true;
+      "bluez5.enable-hw-volume" = true;
+      "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+  };
+    };
+  extraConfig.pipewire."92-low-latency" = {
+    "context.properties" = {
+      "default.clock.rate" = 48000;
+      "default.clock.quantum" = 32;
+      "default.clock.min-quantum" = 32;
+      "default.clock.max-quantum" = 32;
+    };
+  };
+  extraConfig.pipewire-pulse."92-low-latency" = {
+  context.modules = [
+    {
+      name = "libpipewire-module-protocol-pulse";
+      args = {
+        pulse.min.req = "32/48000";
+        pulse.default.req = "32/48000";
+        pulse.max.req = "32/48000";
+        pulse.min.quantum = "32/48000";
+        pulse.max.quantum = "32/48000";
+      };
+    }
+  ];
+  stream.properties = {
+    node.latency = "32/48000";
+    resample.quality = 1;
+  };
+  };
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -149,7 +182,6 @@ console.font =
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-
   systemd.user.services.mpris-proxy = {
     description = "Mpris proxy";
     after = [ "network.target" "sound.target" ];
@@ -167,7 +199,7 @@ console.font =
       password = "fabian66";
       shell = "/run/current-system/sw/bin/zsh";
       createHome = true;
-      extraGroups = [ "networkmanager" "wheel" "camera" ];
+      extraGroups = [ "networkmanager" "wheel" "camera" "audio" "jackaudio"];
       packages = with pkgs; [
       #  thunderbird
       ];
@@ -178,12 +210,12 @@ console.font =
       #description = "mcpeaps_HD (root)";
       password = "fabian66";
       shell = "/run/current-system/sw/bin/zsh";
-      extraGroups = ["networkmanager" "wheel" "camera"];
+      extraGroups = ["networkmanager" "wheel" "camera" "audio" "jackaudio"];
       expires = null;
     };
   };
     home-manager.users.mahd = { pkgs, ... }: {
-    #home.packages = [ pkgs.atool pkgs.httpie ];
+    #home.packages = with pkgs; [ atool httpie ];
     # programs.bash.enable = true;
 
     # The state version is required and should stay at the version you
@@ -228,6 +260,9 @@ console.font =
       };
     };
   };
+  systemd.user.services.pulseaudio.environment = {
+    JACK_PROMISCUOUS_SERVER = "jackaudio";
+  };
 # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -261,6 +296,14 @@ console.font =
     ventoy-full
     ventoy-full-gtk
     ventoy-full-qt
+    archivemount
+    xarchiver
+    pavucontrol
+    libjack2
+    jack2
+    qjackctl
+    jack_capture
+    pciutils
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -400,8 +443,8 @@ console.font =
         i3status
 	i3lock
 	i3blocks
-        autotiling
-        xfce.xfce4-i3-workspaces-plugin
+  autotiling
+  xfce.xfce4-i3-workspaces-plugin
 	xfce.xfce4-windowck-plugin
 	xfce.xfce4-whiskermenu-plugin
 	xfce.xfce4-weather-plugin
@@ -432,11 +475,13 @@ console.font =
   xfce.xfconf
   xfce.xfce4-panel
   xfce.xfce4-panel-profiles
+  xfce.tumbler
+  xdg-desktop-portal-xapp
   ];
       package = pkgs.i3-gaps;
     };
   };
-  #programs.xfconf.enable;
+  programs.xfconf.enable = true;
   #services.xserver.enable = true;
   services.displayManager.defaultSession = "xfce+i3";
   services.picom = {
