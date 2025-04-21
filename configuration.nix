@@ -355,6 +355,9 @@ console.font =
     libgcc
     libnss_nis
     libnss-mysql
+    nss_latest
+    nssmdns
+    nss_ldap
   ];
   programs.adb.enable = true;
   environment.variables = {
