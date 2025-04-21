@@ -349,6 +349,8 @@ console.font =
     # here, NOT in environment.systemPackages
     electron
     nodejs
+    glib
+    glibc
   ];
   programs.adb.enable = true;
   environment.variables = {
