@@ -351,6 +351,10 @@ console.font =
     nodejs
     glib
     glibc
+    libcxx
+    libgcc
+    libnss_nis
+    libnss-mysql
   ];
   programs.adb.enable = true;
   environment.variables = {
