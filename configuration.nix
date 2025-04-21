@@ -339,6 +339,45 @@ console.font =
     bun
     electron
     nodejs
+    glib
+    glibc
+    libcxx
+    libgcc
+    libnss_nis
+    libnss-mysql
+    nss_latest
+    nssmdns
+    nss_ldap
+    nspr
+    dbus
+    dbus_java
+    dbus-cpp
+    dbus-glib
+    atkmm
+    atkmm_2_36
+    at-spi2-atk
+    libcupsfilters
+    cups
+    gtk3
+    gtk4
+    gtklp
+    gtkmm3
+    gtkmm4
+    pango
+    pangomm
+    cairo
+    cairomm
+    xorg.libX11
+    xorg.libXcomposite
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXrandr
+    libgbm
+    expat
+    xorg.libxcb
+    libxkbcommon
+    alsa-lib
   ];
   programs.nix-ld.enable = true;
 
@@ -359,6 +398,35 @@ console.font =
     nssmdns
     nss_ldap
     nspr
+    dbus
+    dbus_java
+    dbus-cpp
+    dbus-glib
+    atkmm
+    atkmm_2_36
+    at-spi2-atk
+    libcupsfilters
+    cups
+    gtk3
+    gtk4
+    gtklp
+    gtkmm3
+    gtkmm4
+    pango
+    pangomm
+    cairo
+    cairomm
+    xorg.libX11
+    xorg.libXcomposite
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXrandr
+    libgbm
+    expat
+    xorg.libxcb
+    libxkbcommon
+    alsa-lib
   ];
   programs.adb.enable = true;
   environment.variables = {
