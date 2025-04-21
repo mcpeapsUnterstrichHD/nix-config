@@ -358,6 +358,7 @@ console.font =
     nss_latest
     nssmdns
     nss_ldap
+    nspr
   ];
   programs.adb.enable = true;
   environment.variables = {
