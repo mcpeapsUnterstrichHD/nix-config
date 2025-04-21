@@ -26,10 +26,30 @@ console.font =
     _JAVA_OPTIONS = "-Dsun.java2d.uiScale=1";
   };
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot"; # ← use the same mount point here.
+    };
+    grub = {
+      enable = true;
+      theme = pkgs.nixos-grub2-theme;
+      efiSupport = true;
+      zfsSupport = true;
+      memtest86.enable = true;
+      splashMode = "normal";
+      devices = [ "nodev" ];
+    };
+  };
   # Enable BBR congestion control
-    boot.kernelModules = [ "tcp_bbr" "snd-seq" "snd-rawmidi" ];
+    boot.kernelModules = [
+      "tcp_bbr"
+      "snd-seq"
+      "snd-rawmidi"
+      "v4l2loopback"
+    ];
+    boot.modprobeConfig.enable = true;
+    boot.modprobeConfig.useUbuntuModuleBlacklist = true;
     boot.kernel.sysctl."net.ipv4.tcp_congestion_control" = "bbr";
     boot.kernel.sysctl."net.core.default_qdisc" = "fq"; # see https://news.ycombinator.com/item?id=14814530
 
@@ -74,10 +94,6 @@ console.font =
       #themePackages = [ pkgs.nordic ];
     };
 
-    # Register a v4l2loopback device at boot
-    #boot.kernelModules = [
-    # "v4l2loopback"
-    #];
 
     # For mounting many cameras.
     # Need to set `users.users.alice.extraGroups = ["camera"];` for each user allowed.
@@ -199,7 +215,7 @@ console.font =
       password = "fabian66";
       shell = "/run/current-system/sw/bin/zsh";
       createHome = true;
-      extraGroups = [ "networkmanager" "wheel" "camera" "audio" "jackaudio"];
+      extraGroups = [ "networkmanager" "wheel" "camera" "audio" "jackaudio" "libvirtd" "kvm" "adbusers" "podman"];
       packages = with pkgs; [
       #  thunderbird
       ];
@@ -210,7 +226,7 @@ console.font =
       #description = "mcpeaps_HD (root)";
       password = "fabian66";
       shell = "/run/current-system/sw/bin/zsh";
-      extraGroups = ["networkmanager" "wheel" "camera" "audio" "jackaudio"];
+      extraGroups = ["networkmanager" "wheel" "camera" "audio" "jackaudio" "libvirtd" "kvm" "adbusers" "podman"];
       expires = null;
     };
   };
@@ -238,9 +254,11 @@ console.font =
     };
     git = {
       enable = true;
+      package = pkgs.gitFull;
       lfs = {
         enable = true;
         enablePureSSHTransfer = true;
+        package = pkgs.git-lfs;
       };
     };
   };
@@ -269,10 +287,7 @@ console.font =
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     direnv
-    openjdk
     stow
-    gitFull
-    git-lfs
     git-lfs-transfer
     gitAndTools.gh
     gcc
@@ -294,18 +309,124 @@ console.font =
     papirus-nord
     papirus-folders
     ventoy-full
-    ventoy-full-gtk
-    ventoy-full-qt
     archivemount
     xarchiver
     pavucontrol
-    libjack2
     jack2
     qjackctl
     jack_capture
     pciutils
+    protonup-ng
+    protontricks
+    (lutris.override {
+        extraPkgs = pkgs: [
+          # List package dependencies here
+          wineWowPackages.stable
+          winetricks
+        ];
+      })
+    bottles
+    xclip
+    python3Full
+    mangohud
+    steam-run
+    android-tools
+    android-studio
+    android-studio-tools
+    android-udev-rules
+    distrobox
+    unzip
+    bun
+    electron
+    nodejs
   ];
+  programs.nix-ld.enable = true;
 
+  programs.nix-ld.libraries = with pkgs; [
+
+    # Add any missing dynamic libraries for unpackaged programs
+
+    # here, NOT in environment.systemPackages
+    electron
+    nodejs
+  ];
+  programs.adb.enable = true;
+  environment.variables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
+  programs.virt-manager.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    # Create a `docker` alias for podman, to use it as a drop-in replacement
+    dockerCompat = true;
+    # Required for containers under podman-compose to be able to talk to each other.
+    defaultNetwork.settings.dns_enabled = true;
+  };
+  hardware.nvidia-container-toolkit.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    onBoot = "ignore";
+    qemu = {
+      package = pkgs.qemu_full;
+      runAsRoot = true;
+    };
+    onShutdown = "shutdown";
+    allowedBridges = [
+      "virbr0"
+    ];
+  };
+
+nixpkgs.config.android_sdk.accept_license = true;
+
+  programs.java = {
+    enable = true;
+    package = pkgs.jdk;
+  };
+  programs.steam = {
+    gamescopeSession = {
+      enable = true;
+      args = [
+        "-pipewire-dmabuf"
+        "-tenfoot"
+      ];
+    };
+    package = pkgs.steam.override {
+      extraPkgs = pkgs: with pkgs; [
+        xorg.libXcursor
+        xorg.libXi
+        xorg.libXinerama
+        xorg.libXScrnSaver
+        libpng
+        libpulseaudio
+        libvorbis
+        stdenv.cc.cc.lib
+        libkrb5
+        keyutils
+      ];
+    };
+    remotePlay.openFirewall = true;
+    protontricks.enable = true;
+    localNetworkGameTransfers.openFirewall = true;
+    extest.enable = true;
+    enable = true;
+    dedicatedServer.openFirewall = true;
+  };
+
+  programs.gamescope = {
+    enable = true;
+    package = pkgs.gamescope;
+    args = [
+      "--adaptive-sync # VRR support"
+      "--hdr-enabled"
+      "--mangoapp" # performance overlay
+      "--rt"
+      "--steam"
+    ];
+  };
+programs.appimage.enable = true;
+programs.appimage.binfmt = true;
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
    programs.mtr.enable = true;
@@ -410,6 +531,13 @@ console.font =
     };
   };
   services.flatpak.enable = true;
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      bash /hdd/flatpak.sh
+    '';
+  };
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   xdg.portal.config.common.default = "gtk";
