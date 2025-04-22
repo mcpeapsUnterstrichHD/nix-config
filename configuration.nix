@@ -665,10 +665,10 @@ nixpkgs.config.android_sdk.accept_license = true;
       package = pkgs.i3-gaps;
     };
   };
-  services.desktopManager.cosmic = {
-    enable = true;
-    xwayland.enable = true;
-  };
+  #services.desktopManager.cosmic = {
+  #  enable = true;
+  #  xwayland.enable = true;
+  #};
   programs.xfconf.enable = true;
   #services.xserver.enable = true;
   services.displayManager.defaultSession = "xfce+i3";
