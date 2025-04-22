@@ -6,14 +6,12 @@
 
 let
   lib = pkgs.lib;  # Importing lib from pkgs
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/master.tar.gz;
 in
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      (import "${home-manager}/nixos")
     ];
 
 
@@ -108,7 +106,6 @@ console.font =
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.firewall.allowedTCPPorts = [ 445 548 ];
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -206,8 +203,6 @@ console.font =
 };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
   users.users = {
     mahd = {
       isNormalUser = true;
@@ -229,14 +224,6 @@ console.font =
       extraGroups = ["networkmanager" "wheel" "camera" "audio" "jackaudio" "libvirtd" "kvm" "adbusers" "podman"];
       expires = null;
     };
-  };
-    home-manager.users.mahd = { pkgs, ... }: {
-    #home.packages = with pkgs; [ atool httpie ];
-    # programs.bash.enable = true;
-
-    # The state version is required and should stay at the version you
-    # originally installed.
-    home.stateVersion = "25.05";
   };
   # Install firefox.
   programs = {
@@ -330,10 +317,6 @@ console.font =
     python3Full
     mangohud
     steam-run
-    android-tools
-    android-studio
-    android-studio-tools
-    android-udev-rules
     distrobox
     unzip
     bun
@@ -378,7 +361,15 @@ console.font =
     xorg.libxcb
     libxkbcommon
     alsa-lib
+    fpm
+    flatpak-builder
+    snapcraft
   ];
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
   programs.nix-ld.enable = true;
 
   programs.nix-ld.libraries = with pkgs; [
@@ -491,20 +482,7 @@ nixpkgs.config.android_sdk.accept_license = true;
     enable = true;
     dedicatedServer.openFirewall = true;
   };
-
-  programs.gamescope = {
-    enable = true;
-    package = pkgs.gamescope;
-    args = [
-      "--adaptive-sync # VRR support"
-      "--hdr-enabled"
-      "--mangoapp" # performance overlay
-      "--rt"
-      "--steam"
-    ];
-  };
-programs.appimage.enable = true;
-programs.appimage.binfmt = true;
+  nix.settings.auto-optimise-store = true;
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
    programs.mtr.enable = true;
@@ -629,8 +607,8 @@ programs.appimage.binfmt = true;
           enable = true;
           theme.name = "Nordic-darker";
           iconTheme.name = "Nordic-green";
-	  cursorTheme.name = "Nordic-cursors";
-	  clock-format = "KW%V,%A,%0d/%m/%Y|%H:%M:%S";
+          cursorTheme.name = "Nordic-cursors";
+          clock-format = "KW%V,%A,%0d/%m/%Y|%H:%M:%S";
         };
       };
       #defaultSession = "xfce+i3";
@@ -687,6 +665,10 @@ programs.appimage.binfmt = true;
       package = pkgs.i3-gaps;
     };
   };
+  services.desktopManager.cosmic = {
+    enable = true;
+    xwayland.enable = true;
+  };
   programs.xfconf.enable = true;
   #services.xserver.enable = true;
   services.displayManager.defaultSession = "xfce+i3";
@@ -714,8 +696,8 @@ programs.appimage.binfmt = true;
   };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 5173 445 548 22 ];
+  networking.firewall.allowedUDPPorts = [ 5173 22 ];
   # Or disable the firewall altogether.
    networking.firewall.enable = true;
 
